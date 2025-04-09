@@ -1,0 +1,48 @@
+﻿@page "/Counter"
+
+<h3>Lista de Tarefas</h3>
+
+<input @bind="nome" placeholder="Nome da tarefa" />
+<input @bind="descricao" placeholder="Descrição da tarefa" />
+<button @onclick="AdicionarTarefa">Adicionar</button>
+
+<ul>
+    @foreach (var tarefa in tarefas)
+    {
+        <li>
+            <b>@tarefa.Nome:</b> @tarefa.Descricao
+            <button @onclick="() => RemoverTarefa(tarefa.Id)">Excluir</button>
+        </li>
+    }
+</ul>
+
+@code {
+    private string nome;
+    private string descricao;
+    private List<Tarefa> tarefas = new();
+
+    private void AdicionarTarefa()
+    {
+        if (!string.IsNullOrWhiteSpace(nome) && !string.IsNullOrWhiteSpace(descricao))
+        {
+            tarefas.Add(new Tarefa { Id = tarefas.Count + 1, Nome = nome, Descricao = descricao });
+            nome = descricao = string.Empty;
+        }
+    }
+
+    private void RemoverTarefa(int id)
+    {
+        var tarefa = tarefas.FirstOrDefault(t => t.Id == id);
+        if (tarefa != null)
+        {
+            tarefas.Remove(tarefa);
+        }
+    }
+
+    private class Tarefa
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public string Descricao { get; set; }
+    }
+}
